@@ -15,13 +15,13 @@ class GenerateModels(
         timelines.forEach {
             val response = gson.fromJson(it.readText(), Response::class.java)
             val build = timelineParser.getBuild(response!!)
-            File("${it.name}-parsed.json").writeText(Gson().toJson(build))
-            println("Timeline parsed in ${it.name}-parsed.json")
+            File("${it.name.removeExtension()}-parsed.json").writeText(Gson().toJson(build))
+            println("Timeline parsed in ${it.name.removeExtension()}-parsed.json")
             if (generateTraceEvents) {
                 val traceEventsParser = TraceEventsParser()
                 traceEventsParser.generateTraceFile(
                     response.data.timelineGraph,
-                    "${it.name}-event-traces.json"
+                    "${it.name.removeExtension()}-event-traces.json"
                 )
             }
         }

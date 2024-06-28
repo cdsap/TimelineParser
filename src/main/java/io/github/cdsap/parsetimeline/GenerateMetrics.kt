@@ -27,17 +27,17 @@ class GenerateMetrics(
         println("Calculating metrics")
         val metrics = Metrics(firstBuild, secondBuild).get()
 
-        metricsCsv(metrics, "metrics-${firstTimeline.name}-${secondTimeline.name}")
+        metricsCsv(metrics, "metrics-${firstTimeline.name.removeExtension()}-${secondTimeline.name.removeExtension()}")
 
         if (generateTraceEvents) {
             val traceEventsParser = TraceEventsParser()
             traceEventsParser.generateTraceFile(
                 firstTimeLineResponse.data.timelineGraph,
-                "$firstTimeline-event-traces.json"
+                "${firstTimeline.name.removeExtension()}-event-traces.json"
             )
             traceEventsParser.generateTraceFile(
                 secondTimeLineResponse.data.timelineGraph,
-                "$secondTimeline-event-traces.json"
+                "${secondTimeline.name.removeExtension()}-event-traces.json"
             )
         }
     }
