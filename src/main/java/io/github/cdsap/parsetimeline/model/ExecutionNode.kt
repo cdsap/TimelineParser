@@ -30,6 +30,7 @@ data class ExecutionNode(
     val annotationProcessorExecutions: List<Any>,
     val javaToolchains: JavaToolchains?,
     val skipReasonMessage: String?,
+    val inputArtifact: Int?,
     val hasTransformRequests: Boolean,
     val __typename: String
 )

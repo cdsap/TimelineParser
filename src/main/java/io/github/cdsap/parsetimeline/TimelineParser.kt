@@ -11,7 +11,7 @@ class TimelineParser {
             arrayOf("fromCache", "avoided_up_to_date", "success", "failed", "no-source", "skipped", "unknown", "failed")
 
         val tasks = mutableListOf<Task>()
-        response.data.executionNodes.forEach { executionNode ->
+        response.data.executionNodes.filter { it.inputArtifact == null }.forEach { executionNode ->
             val nodeName = response.data.nodeNames[executionNode.name.name]
             val projectPath = response.data.projectPaths[executionNode.name.projectPath]
             val type = response.data.workTypes[executionNode.type]

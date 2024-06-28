@@ -16,6 +16,9 @@
 # Generate Metrics from two timeline json files generating a Trace event file
 ./timelineparer --mode generate-metrics  --first-timeline first.json --second-timeline second.json --generate-trace-events
 
+# Generate Build Models from timeline json file
+./timelineparer -mode generate-models --timelie timeline1.json
+
 ```
 ### From sources
 ```sh
@@ -28,8 +31,8 @@
 
 ### Modes
 
-1. **generate-metrics**
-2. **generate-models**
+1. **generate-metrics**: Compare two timeline files and generate metrics using `io.github.cdsap:comparescans`
+2. **generate-models**: Generate models from the timeline files based on the `Build` entity of `io.github.cdsap:geapi-data`
 
 ### Options
 

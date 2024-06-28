@@ -18,7 +18,7 @@ fatBinary {
 }
 
 dependencies {
-    implementation("io.github.cdsap:comparescans:0.1.0")
+    implementation("io.github.cdsap:comparescans:0.1.1")
     implementation("com.github.ajalt.clikt:clikt:3.5.0")
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("io.github.cdsap:geapi-data:0.2.7")
