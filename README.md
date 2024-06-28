@@ -8,19 +8,19 @@
 ```sh
 
  curl -L https://github.com/cdsap/TimelineParser/releases/download/v0.2.0/timelineparer --output timelineparer
- chmod 0757 timelineparer
+ chmod 0757 timelineparser
 
 # Generate Metrics from two timeline json files
-./timelineparer --mode generate-metrics  -timeline first.json --timeline second.json
+./timelineparser --mode generate-metrics  -timeline first.json --timeline second.json
 
 # Generate Metrics from three timeline json files
-./timelineparer --mode generate-metrics  -timeline first.json --timeline second.json --third second.json
+./timelineparser --mode generate-metrics  -timeline first.json --timeline second.json --third second.json
 
 # Generate Metrics from two timeline json files generating a Trace event file
-./timelineparer --mode generate-metrics  --timeline first.json --timeline second.json --generate-trace-events
+./timelineparser --mode generate-metrics  --timeline first.json --timeline second.json --generate-trace-events
 
 # Generate Build Models from timeline json file
-./timelineparer -mode generate-models --timelie timeline1.json
+./timelineparser -mode generate-models --timelie timeline1.json
 
 # Generate Kotlin Usage Reports
  ./timelineparser --mode kotlin-usage-report --timeline timeline.json
