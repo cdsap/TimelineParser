@@ -14,7 +14,7 @@ repositories {
 
 fatBinary {
     mainClass = "io.github.cdsap.parsetimeline.Main"
-    name = "parsetimeline"
+    name = "timelineparser"
 }
 
 dependencies {
