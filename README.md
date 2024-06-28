@@ -7,17 +7,17 @@
 ### Download the CLI
 ```sh
 
- curl -L https://github.com/cdsap/TimelineParser/releases/download/v0.1.1/timelineparser --output timelineparer
- chmod 0757 timelineparer
+ curl -L https://github.com/cdsap/TimelineParser/releases/download/v0.1.1/timelineparser --output timelineparser
+ chmod 0757 timelineparser
 
 # Generate Metrics from two timeline json files
-./timelineparer --mode generate-metrics  --first-timeline first.json --second-timeline second.json
+./timelineparser --mode generate-metrics  --first-timeline first.json --second-timeline second.json
 
 # Generate Metrics from two timeline json files generating a Trace event file
-./timelineparer --mode generate-metrics  --first-timeline first.json --second-timeline second.json --generate-trace-events
+./timelineparser --mode generate-metrics  --first-timeline first.json --second-timeline second.json --generate-trace-events
 
 # Generate Build Models from timeline json file
-./timelineparer -mode generate-models --timelie timeline1.json
+./timelineparser -mode generate-models --timelie timeline1.json
 
 ```
 ### From sources
