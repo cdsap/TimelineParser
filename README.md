@@ -32,7 +32,7 @@
 
 ./gradlew :fatBinary
 
-./timelineparer -mode generate-metrics  --timeline first.json --timeline second.json
+./timelineparser -mode generate-metrics  --timeline first.json --timeline second.json
 ```
 
 
