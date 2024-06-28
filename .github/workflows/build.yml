@@ -19,8 +19,6 @@ jobs:
                   distribution:  ${{ matrix.vendor }}
                   java-version:  ${{ matrix.version }}
 
-            - name: Setup Gradle
-              uses: gradle/actions/setup-gradle@v3
             - name: Execute Gradle ktlint
               run:  ./gradlew ktlintCheck
     build:
@@ -38,8 +36,6 @@ jobs:
                 distribution:  ${{ matrix.vendor }}
                 java-version:  ${{ matrix.version }}
 
-          - name: Setup Gradle
-            uses: gradle/actions/setup-gradle@v3
           - name: Execute Gradle build
             run:  ./gradlew test
     fatbinary:
