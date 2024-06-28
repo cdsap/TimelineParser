@@ -65,8 +65,8 @@ jobs:
               with:
                 name: report-${{ matrix.vendor }}-${{ matrix.os }}--${{ matrix.version }}
                 path: |
-                   ./timeline1-parsed.json
-                   ./metrics-timeline1-timeline2.csv
-                   ./timeline1-event-traces.json
-                   ./timeline2-event-traces.json
+                   ./resources/timeline1-parsed.json
+                   ./resources/metrics-timeline1-timeline2.csv
+                   ./resources/timeline1-event-traces.json
+                   ./resources/timeline2-event-traces.json
 
