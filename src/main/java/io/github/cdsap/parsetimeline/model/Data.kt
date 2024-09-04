@@ -25,5 +25,6 @@ data class Data(
     val configurationNames: List<String>,
     val attributes: List<Attribute>,
     val isCriticalPathAvailable: Boolean,
-    val timelineGraph: TimelineGraph
+    val timelineGraph: TimelineGraph,
+    val timelineMetricsGraph: TimelineMetricsGraph
 )
