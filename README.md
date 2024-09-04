@@ -7,17 +7,24 @@
 ### Download the CLI
 ```sh
 
- curl -L https://github.com/cdsap/TimelineParser/releases/download/v0.1.1/timelineparser --output timelineparser
+ curl -L https://github.com/cdsap/TimelineParser/releases/download/v0.2.0/timelineparer --output timelineparer
  chmod 0757 timelineparser
 
 # Generate Metrics from two timeline json files
-./timelineparser --mode generate-metrics  --first-timeline first.json --second-timeline second.json
+./timelineparser --mode generate-metrics  -timeline first.json --timeline second.json
+
+# Generate Metrics from three timeline json files
+./timelineparser --mode generate-metrics  -timeline first.json --timeline second.json --third second.json
 
 # Generate Metrics from two timeline json files generating a Trace event file
-./timelineparser --mode generate-metrics  --first-timeline first.json --second-timeline second.json --generate-trace-events
+./timelineparser --mode generate-metrics  --timeline first.json --timeline second.json --generate-trace-events
 
 # Generate Build Models from timeline json file
 ./timelineparser -mode generate-models --timelie timeline1.json
+
+# Generate Kotlin Usage Reports
+ ./timelineparser --mode kotlin-usage-report --timeline timeline.json
+
 
 ```
 ### From sources
@@ -25,20 +32,19 @@
 
 ./gradlew :fatBinary
 
-./timelineparer -mode generate-metrics  --first-timeline first.json --second-timeline second.json
+./timelineparser -mode generate-metrics  --timeline first.json --timeline second.json
 ```
 
 
 ### Modes
 
-1. **generate-metrics**: Compare two timeline files and generate metrics using `io.github.cdsap:comparescans`
+1. **generate-metrics**: Compare timeline files and generate metrics using `io.github.cdsap:comparescans`
 2. **generate-models**: Generate models from the timeline files based on the `Build` entity of `io.github.cdsap:geapi-data`
+2. **kotlin-usage-reports**: Generate Kotlin memory usage report by Kotlin tasks divided in segments.
 
 ### Options
 
 - `--mode` (required): Specifies the mode of operation. Possible values are `generate-metrics` and `genrate-models`.
-- `--first-timeline`: The first `timeline.json` file from Develocity for generating metrics (required for `generate-metrics` mode).
-- `--second-timeline`: The second `timeline.json` file from Develocity for generating metrics (required for `generate-metrics` mode).
 - `--timeline`: The `timeline.json` file(s) from Develocity for parsing (required for `parse` mode, can be specified multiple times).
 - `--generate-trace-events`: Flag to generate trace event files (optional).
 
