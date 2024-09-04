@@ -14,7 +14,7 @@ class GenerateModels(
         val gson = Gson()
         timelines.forEach {
             val response = gson.fromJson(it.readText(), Response::class.java)
-            val build = timelineParser.getBuild(response!!)
+            val build = timelineParser.getBuild(response!!, it.name)
             File("${it.name.removeExtension()}-parsed.json").writeText(Gson().toJson(build))
             println("Timeline parsed in ${it.name.removeExtension()}-parsed.json")
             if (generateTraceEvents) {

@@ -1,57 +1,59 @@
 package io.github.cdsap.parsetimeline
 
 import com.google.gson.Gson
-import io.github.cdsap.comparescans.Metrics
-import io.github.cdsap.comparescans.model.Metric
+import io.github.cdsap.comparescans.MultipleScanMetrics
+import io.github.cdsap.comparescans.model.BuildWithResourceUsage
+import io.github.cdsap.comparescans.model.MultipleBuildScanMetric
 import io.github.cdsap.parsetimeline.model.Response
 import java.io.BufferedWriter
 import java.io.File
 
 class GenerateMetrics(
-    private val firstTimeline: File,
-    private val secondTimeline: File,
+    private val timelines: List<File>,
     private val generateTraceEvents: Boolean
 ) {
 
     fun generate() {
         val timelineParser = TimelineParser()
         val gson = Gson()
-
-        println("Parsing timeline $firstTimeline")
-        val firstTimeLineResponse = gson.fromJson(firstTimeline.readText(), Response::class.java)
-        val firstBuild = timelineParser.getBuild(firstTimeLineResponse!!)
-        println("Parsing timeline $secondTimeline")
-        val secondTimeLineResponse = gson.fromJson(secondTimeline.readText(), Response::class.java)
-        val secondBuild = timelineParser.getBuild(secondTimeLineResponse!!)
-
+        val builds = mutableListOf<BuildWithResourceUsage>()
+        val responses = mutableMapOf<String, Response>()
+        timelines.forEach {
+            println("Parsing timeline ${it.name}")
+            val timeLineResponse = gson.fromJson(it.readText(), Response::class.java)
+            responses[it.name] = timeLineResponse
+            builds.add(timelineParser.getBuild(timeLineResponse!!, it.name))
+        }
         println("Calculating metrics")
-        val metrics = Metrics(firstBuild, secondBuild).get()
-
-        metricsCsv(metrics, "metrics-${firstTimeline.name.removeExtension()}-${secondTimeline.name.removeExtension()}")
+        val metrics = MultipleScanMetrics(builds).get()
+        val name = timelines.map { it.name.removeExtension() }.joinToString("-")
+        metricsCsv(metrics, "metrics-$name")
 
         if (generateTraceEvents) {
-            val traceEventsParser = TraceEventsParser()
-            traceEventsParser.generateTraceFile(
-                firstTimeLineResponse.data.timelineGraph,
-                "${firstTimeline.name.removeExtension()}-event-traces.json"
-            )
-            traceEventsParser.generateTraceFile(
-                secondTimeLineResponse.data.timelineGraph,
-                "${secondTimeline.name.removeExtension()}-event-traces.json"
-            )
+            responses.forEach {
+                val traceEventsParser = TraceEventsParser()
+                traceEventsParser.generateTraceFile(
+                    it.value.data.timelineGraph,
+                    "${it.key.removeExtension()}-event-traces.json"
+                )
+            }
         }
     }
 
-    private fun metricsCsv(metrics: List<Metric>, filePath: String) {
+    private fun metricsCsv(metrics: List<MultipleBuildScanMetric>, filePath: String) {
         val csv = "$filePath.csv"
+
         val headers =
-            "entity,name,subcategory,type,first build,second build\n"
+            "entity,name,subcategory,type,${metrics.first().values.keys.joinToString(",")}\n"
         val startTimestamp = System.currentTimeMillis()
         File(csv).bufferedWriter().use { out: BufferedWriter ->
             out.write(headers)
             metrics.forEach { metric ->
+
                 val line =
-                    "${metric.entity.name},${metric.name},${metric.subcategory},${metric.type.name},${metric.firstBuild},${metric.secondBuild}\n"
+                    "${metric.metric.entity.name}," +
+                        "${metric.metric.name},${metric.metric.subcategory},${metric.metric.type.name}," +
+                        "${metric.values.values.joinToString(",")}\n"
                 out.write(line)
             }
         }

@@ -1,16 +1,24 @@
 package io.github.cdsap.parsetimeline
 
+import io.github.cdsap.comparescans.model.BuildWithResourceUsage
 import io.github.cdsap.geapi.client.model.AvoidanceSavingsSummary
 import io.github.cdsap.geapi.client.model.Build
+import io.github.cdsap.geapi.client.model.Metric
+import io.github.cdsap.geapi.client.model.PerformanceMetrics
+import io.github.cdsap.geapi.client.model.PerformanceUsage
 import io.github.cdsap.geapi.client.model.Task
 import io.github.cdsap.parsetimeline.model.Response
+import io.github.cdsap.parsetimeline.model.TimelineMetricsGraph
+import org.nield.kotlinstatistics.median
+import org.nield.kotlinstatistics.percentile
 
 class TimelineParser {
-    fun getBuild(response: Response): Build {
+    fun getBuild(response: Response, name: String): BuildWithResourceUsage {
         val outcomes =
             arrayOf("fromCache", "avoided_up_to_date", "success", "failed", "no-source", "skipped", "unknown", "failed")
 
         val tasks = mutableListOf<Task>()
+
         response.data.executionNodes.filter { it.inputArtifact == null }.forEach { executionNode ->
             val nodeName = response.data.nodeNames[executionNode.name.name]
             val projectPath = response.data.projectPaths[executionNode.name.projectPath]
@@ -50,18 +58,30 @@ class TimelineParser {
                 )
             )
         }
-        return Build(
-            builtTool = "gradle",
-            taskExecution = tasks.toTypedArray(),
-            tags = emptyArray(),
-            requestedTask = emptyArray(),
-            id = "",
-            buildDuration = 0L,
-            avoidanceSavingsSummary = AvoidanceSavingsSummary("0", "0", "0"),
-            buildStartTime = 0L,
-            projectName = "",
-            goalExecution = emptyArray(),
-            values = emptyArray()
+        return BuildWithResourceUsage(
+            build = Build(
+                builtTool = "gradle",
+                taskExecution = tasks.toTypedArray(),
+                tags = emptyArray(),
+                requestedTask = emptyArray(),
+                id = name,
+                buildDuration = 0L,
+                avoidanceSavingsSummary = AvoidanceSavingsSummary("0", "0", "0"),
+                buildStartTime = 0L,
+                projectName = "",
+                goalExecution = emptyArray(),
+                values = emptyArray()
+            ),
+            usage = if (response.data.timelineMetricsGraph != null) {
+                PerformanceUsage(
+                    total = calculateResponse(response.data.timelineMetricsGraph),
+                    execution = calculateResponse(response.data.timelineMetricsGraph),
+                    nonExecution = calculateResponse(response.data.timelineMetricsGraph),
+                    totalMemory = response.data.timelineMetricsGraph.totalSystemMemory
+                )
+            } else {
+                null
+            }
         )
     }
 
@@ -82,5 +102,31 @@ class TimelineParser {
         } else {
             throw IllegalArgumentException("Invalid input: $value")
         }
+    }
+
+    private fun calculateResponse(timelineMetricsGraph: TimelineMetricsGraph): PerformanceMetrics {
+        return PerformanceMetrics(
+            buildProcessCpu = returnValues(timelineMetricsGraph.data.ownProcessCPU.values.dropLast(1)),
+            allProcessesCpu = returnValues(timelineMetricsGraph.data.totalCPU.values.dropLast(1)),
+            buildChildProcessesCpu = returnValues(timelineMetricsGraph.data.spawnProcessCPU.values.dropLast(1)),
+            allProcessesMemory = returnValues(timelineMetricsGraph.data.totalMemory.values.dropLast(1)),
+            buildProcessMemory = returnValues(timelineMetricsGraph.data.ownProcessMemory.values.dropLast(1)),
+            buildChildProcessesMemory = returnValues(timelineMetricsGraph.data.spawnProcessMemory.values.dropLast(1)),
+            diskReadThroughput = returnValues(timelineMetricsGraph.data.ioReadSpeed.values.dropLast(1)),
+            diskWriteThroughput = returnValues(timelineMetricsGraph.data.ioWriteSpeed.values.dropLast(1)),
+            networkUploadThroughput = returnValues(timelineMetricsGraph.data.networkUploadSpeed.values.dropLast(1)),
+            networkDownloadThroughput = returnValues(timelineMetricsGraph.data.networkDownloadSpeed.values.dropLast(1))
+        )
+    }
+
+    private fun returnValues(performanceMetricsRaw: List<Long>): Metric {
+        return Metric(
+            max = performanceMetricsRaw.filter { it != null }.max(),
+            median = performanceMetricsRaw.filter { it != null }.median().toLong(),
+            p25 = performanceMetricsRaw.filter { it != null }.percentile(25.0).toLong(),
+            p75 = performanceMetricsRaw.filter { it != null }.percentile(75.0).toLong(),
+            p95 = performanceMetricsRaw.filter { it != null }.percentile(95.0).toLong(),
+            average = performanceMetricsRaw.filter { it != null }.average().toLong()
+        )
     }
 }

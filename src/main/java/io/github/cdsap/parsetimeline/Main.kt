@@ -13,26 +13,30 @@ fun main(args: Array<String>) {
 }
 
 class TimeLine : CliktCommand() {
-    private val mode by option().choice("generate-metrics", "generate-models").required()
-    private val firstTimeline by option().file()
-    private val secondTimeline by option().file()
-    private val timeline by option().file().multiple()
+    private val mode by option().choice("generate-metrics", "generate-models", "kotlin-usage-report").required()
+    private val timeline by option().file().multiple(required = true)
     private val generateTraceEvents by option().flag(default = false)
 
     override fun run() {
         when (mode) {
             "generate-metrics" -> {
-                if (firstTimeline == null || secondTimeline == null) {
-                    throw IllegalArgumentException("Missing required parameters for generate-metrics: example: --mode generate-metrics --first-timeline <first-timeline.json> --second-timeline <second-timeline.json>")
-                }
-                GenerateMetrics(firstTimeline!!, secondTimeline!!, generateTraceEvents).generate()
+                GenerateMetrics(timeline, generateTraceEvents).generate()
             }
+
             "generate-models" -> {
                 if (timeline.isEmpty()) {
                     throw IllegalArgumentException("Missing required parameters for generate-models: example: --mode generate-models --timeline <timeline.json>")
                 }
                 GenerateModels(timeline, generateTraceEvents).generate()
             }
+
+            "kotlin-usage-report" -> {
+                if (timeline.size != 1) {
+                    throw IllegalArgumentException("kotlin-usage-report only supports 1 timeline parameter")
+                }
+                KotlinUsageReport(timeline[0]).generate()
+            }
+
             else -> {
                 throw IllegalArgumentException("Invalid value for --mode: $mode")
             }

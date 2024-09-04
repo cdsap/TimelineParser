@@ -58,8 +58,10 @@ jobs:
             - name: Execute Gradle build
               run:  |
                 ./gradlew :fatBinary
-                ./timelineparser --mode generate-metrics --first-timeline resources/timeline1.json --second-timeline resources/timeline2.json --generate-trace-events
+                ./timelineparser --mode generate-metrics --timeline resources/timeline1.json --timeline resources/timeline2.json --generate-trace-events
                 ./timelineparser --mode generate-models --timeline resources/timeline1.json
+                ./timelineparser --mode kotlin-usage-report --timeline resources/timeline_resource_usage.json
+
             - name: Archive production artifacts
               uses: actions/upload-artifact@v4
               with:
@@ -69,4 +71,6 @@ jobs:
                    ./metrics-timeline1-timeline2.csv
                    ./timeline1-event-traces.json
                    ./timeline2-event-traces.json
+                   ./segments.csv
+                   ./memory_by_segments.csv
 
