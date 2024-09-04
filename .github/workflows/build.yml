@@ -72,5 +72,5 @@ jobs:
                    ./timeline1-event-traces.json
                    ./timeline2-event-traces.json
                    ./segments.csv
-                   ./memory_by_segments.csv
+                   ./memory_by_segment.csv
 
