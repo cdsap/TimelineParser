@@ -1,13 +1,7 @@
 package io.github.cdsap.parsetimeline
 
-import io.github.cdsap.comparescans.model.BuildWithResourceUsage
-import io.github.cdsap.geapi.client.model.AvoidanceSavingsSummary
-import io.github.cdsap.geapi.client.model.Build
-import io.github.cdsap.geapi.client.model.Metric
-import io.github.cdsap.geapi.client.model.PerformanceMetrics
-import io.github.cdsap.geapi.client.model.PerformanceUsage
-import io.github.cdsap.geapi.client.model.Task
-import io.github.cdsap.parsetimeline.model.Response
+ import io.github.cdsap.geapi.client.model.*
+ import io.github.cdsap.parsetimeline.model.Response
 import io.github.cdsap.parsetimeline.model.TimelineMetricsGraph
 import org.nield.kotlinstatistics.median
 import org.nield.kotlinstatistics.percentile
@@ -58,8 +52,9 @@ class TimelineParser {
                 )
             )
         }
-        return BuildWithResourceUsage(
-            build = Build(
+        if(response.data.timelineMetricsGraph.data == null) {
+            return BuildWithResourceUsage(
+
                 builtTool = "gradle",
                 taskExecution = tasks.toTypedArray(),
                 tags = emptyArray(),
@@ -70,19 +65,32 @@ class TimelineParser {
                 buildStartTime = 0L,
                 projectName = "",
                 goalExecution = emptyArray(),
-                values = emptyArray()
-            ),
-            usage = if (response.data.timelineMetricsGraph != null) {
-                PerformanceUsage(
+                values = emptyArray(),
+                total = nullResponse(),
+                execution = nullResponse(),
+                nonExecution = nullResponse(),
+                totalMemory = -1
+            )
+        } else {
+        return BuildWithResourceUsage(
+
+                builtTool = "gradle",
+                taskExecution = tasks.toTypedArray(),
+                tags = emptyArray(),
+                requestedTask = emptyArray(),
+                id = name,
+                buildDuration = 0L,
+                avoidanceSavingsSummary = AvoidanceSavingsSummary("0", "0", "0"),
+                buildStartTime = 0L,
+                projectName = "",
+                goalExecution = emptyArray(),
+                values = emptyArray(),
                     total = calculateResponse(response.data.timelineMetricsGraph),
                     execution = calculateResponse(response.data.timelineMetricsGraph),
                     nonExecution = calculateResponse(response.data.timelineMetricsGraph),
-                    totalMemory = response.data.timelineMetricsGraph.totalSystemMemory
-                )
-            } else {
-                null
-            }
-        )
+                    totalMemory = response.data.timelineMetricsGraph.totalSystemMemory )
+
+        }
     }
 
     private fun convertToBytes(value: String): Long {
@@ -129,4 +137,30 @@ class TimelineParser {
             average = performanceMetricsRaw.filter { it != null }.average().toLong()
         )
     }
+
+    private fun nullResponse() : PerformanceMetrics {
+        return PerformanceMetrics(
+            buildProcessCpu = nullMetric(),
+            allProcessesCpu = nullMetric(),
+            buildChildProcessesCpu = nullMetric(),
+            allProcessesMemory = nullMetric(),
+            buildProcessMemory = nullMetric(),
+            buildChildProcessesMemory = nullMetric(),
+            diskReadThroughput = nullMetric(),
+            diskWriteThroughput = nullMetric(),
+            networkUploadThroughput = nullMetric(),
+            networkDownloadThroughput = nullMetric()
+        )
+    }
+    private fun nullMetric() : Metric {
+        return Metric(
+            max = -1,
+            median = -1,
+            p25 = -1,
+            p75 = -1,
+            p95 = -1,
+            average =-1
+        )
+    }
 }
+
