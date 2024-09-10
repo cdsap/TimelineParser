@@ -1,7 +1,11 @@
 package io.github.cdsap.parsetimeline
 
- import io.github.cdsap.geapi.client.model.*
- import io.github.cdsap.parsetimeline.model.Response
+import io.github.cdsap.geapi.client.model.AvoidanceSavingsSummary
+import io.github.cdsap.geapi.client.model.BuildWithResourceUsage
+import io.github.cdsap.geapi.client.model.Metric
+import io.github.cdsap.geapi.client.model.PerformanceMetrics
+import io.github.cdsap.geapi.client.model.Task
+import io.github.cdsap.parsetimeline.model.Response
 import io.github.cdsap.parsetimeline.model.TimelineMetricsGraph
 import org.nield.kotlinstatistics.median
 import org.nield.kotlinstatistics.percentile
@@ -52,7 +56,7 @@ class TimelineParser {
                 )
             )
         }
-        if(response.data.timelineMetricsGraph.data == null) {
+        if (response.data.timelineMetricsGraph.data == null) {
             return BuildWithResourceUsage(
 
                 builtTool = "gradle",
@@ -72,7 +76,7 @@ class TimelineParser {
                 totalMemory = -1
             )
         } else {
-        return BuildWithResourceUsage(
+            return BuildWithResourceUsage(
 
                 builtTool = "gradle",
                 taskExecution = tasks.toTypedArray(),
@@ -85,11 +89,11 @@ class TimelineParser {
                 projectName = "",
                 goalExecution = emptyArray(),
                 values = emptyArray(),
-                    total = calculateResponse(response.data.timelineMetricsGraph),
-                    execution = calculateResponse(response.data.timelineMetricsGraph),
-                    nonExecution = calculateResponse(response.data.timelineMetricsGraph),
-                    totalMemory = response.data.timelineMetricsGraph.totalSystemMemory )
-
+                total = calculateResponse(response.data.timelineMetricsGraph),
+                execution = calculateResponse(response.data.timelineMetricsGraph),
+                nonExecution = calculateResponse(response.data.timelineMetricsGraph),
+                totalMemory = response.data.timelineMetricsGraph.totalSystemMemory
+            )
         }
     }
 
@@ -138,7 +142,7 @@ class TimelineParser {
         )
     }
 
-    private fun nullResponse() : PerformanceMetrics {
+    private fun nullResponse(): PerformanceMetrics {
         return PerformanceMetrics(
             buildProcessCpu = nullMetric(),
             allProcessesCpu = nullMetric(),
@@ -152,15 +156,14 @@ class TimelineParser {
             networkDownloadThroughput = nullMetric()
         )
     }
-    private fun nullMetric() : Metric {
+    private fun nullMetric(): Metric {
         return Metric(
             max = -1,
             median = -1,
             p25 = -1,
             p75 = -1,
             p95 = -1,
-            average =-1
+            average = -1
         )
     }
 }
-
