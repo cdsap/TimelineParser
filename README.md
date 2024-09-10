@@ -7,7 +7,7 @@
 ### Download the CLI
 ```sh
 
- curl -L https://github.com/cdsap/TimelineParser/releases/download/v0.2.0/timelineparer --output timelineparer
+ curl -L https://github.com/cdsap/TimelineParser/releases/download/v0.3.0/timelineparer --output timelineparer
  chmod 0757 timelineparser
 
 # Generate Metrics from two timeline json files
