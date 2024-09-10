@@ -56,7 +56,7 @@ class TimelineParser {
                 )
             )
         }
-        if (response.data.timelineMetricsGraph.data == null) {
+        if (response.data.timelineMetricsGraph == null || response.data.timelineMetricsGraph.data == null) {
             return BuildWithResourceUsage(
 
                 builtTool = "gradle",

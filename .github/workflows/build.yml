@@ -59,6 +59,7 @@ jobs:
               run:  |
                 ./gradlew :fatBinary
                 ./timelineparser --mode generate-metrics --timeline resources/timeline1.json --timeline resources/timeline2.json --generate-trace-events
+                ./timelineparser --mode generate-metrics --timeline resources/timeline_resource_usage.json
                 ./timelineparser --mode generate-models --timeline resources/timeline1.json
                 ./timelineparser --mode kotlin-usage-report --timeline resources/timeline_resource_usage.json
 
