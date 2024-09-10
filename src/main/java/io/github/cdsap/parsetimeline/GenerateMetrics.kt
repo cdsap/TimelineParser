@@ -2,8 +2,8 @@ package io.github.cdsap.parsetimeline
 
 import com.google.gson.Gson
 import io.github.cdsap.comparescans.MultipleScanMetrics
-import io.github.cdsap.comparescans.model.BuildWithResourceUsage
 import io.github.cdsap.comparescans.model.MultipleBuildScanMetric
+import io.github.cdsap.geapi.client.model.BuildWithResourceUsage
 import io.github.cdsap.parsetimeline.model.Response
 import java.io.BufferedWriter
 import java.io.File
