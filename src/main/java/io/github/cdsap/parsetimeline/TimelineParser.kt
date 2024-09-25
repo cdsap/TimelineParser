@@ -118,12 +118,12 @@ class TimelineParser {
 
     private fun calculateResponse(timelineMetricsGraph: TimelineMetricsGraph): PerformanceMetrics {
         return PerformanceMetrics(
-            buildProcessCpu = returnValues(timelineMetricsGraph.data.ownProcessCPU.values.dropLast(1)),
-            allProcessesCpu = returnValues(timelineMetricsGraph.data.totalCPU.values.dropLast(1)),
-            buildChildProcessesCpu = returnValues(timelineMetricsGraph.data.spawnProcessCPU.values.dropLast(1)),
+            buildProcessCpu = returnValues(timelineMetricsGraph.data.buildProcessCpu.values.dropLast(1)),
+            allProcessesCpu = returnValues(timelineMetricsGraph.data.totalCpu.values.dropLast(1)),
+            buildChildProcessesCpu = returnValues(timelineMetricsGraph.data.buildProcessCpu.values.dropLast(1)),
             allProcessesMemory = returnValues(timelineMetricsGraph.data.totalMemory.values.dropLast(1)),
-            buildProcessMemory = returnValues(timelineMetricsGraph.data.ownProcessMemory.values.dropLast(1)),
-            buildChildProcessesMemory = returnValues(timelineMetricsGraph.data.spawnProcessMemory.values.dropLast(1)),
+            buildProcessMemory = returnValues(timelineMetricsGraph.data.buildProcessMemory.values.dropLast(1)),
+            buildChildProcessesMemory = returnValues(timelineMetricsGraph.data.buildChildProcessesMemory.values.dropLast(1)),
             diskReadThroughput = returnValues(timelineMetricsGraph.data.ioReadSpeed.values.dropLast(1)),
             diskWriteThroughput = returnValues(timelineMetricsGraph.data.ioWriteSpeed.values.dropLast(1)),
             networkUploadThroughput = returnValues(timelineMetricsGraph.data.networkUploadSpeed.values.dropLast(1)),

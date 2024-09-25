@@ -107,7 +107,7 @@ class UsagePerformanceParser {
         segments.forEach { segment ->
 
             val memoryPositions = findMemoryMetricPositions(segment.startTime, segment.finishTime, graphData)
-            val memoryValues = getMemoryMetricValues(graphData.spawnProcessMemory, memoryPositions)
+            val memoryValues = getMemoryMetricValues(graphData.buildChildProcessesMemory, memoryPositions)
             if (!memoryValues.isNullOrEmpty()) {
                 val maxMemory = bytesToGigabytes(memoryValues.max().toLong())
                 val avgMemory = bytesToGigabytes(memoryValues.average().toLong())

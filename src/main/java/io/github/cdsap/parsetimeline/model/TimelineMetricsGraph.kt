@@ -10,12 +10,12 @@ data class TimelineMetricsGraph(
 ) {
     data class GraphData(
         val timestamp: List<Long>,
-        val totalCPU: CpuMetric,
-        val ownProcessCPU: CpuMetric,
-        val spawnProcessCPU: CpuMetric,
+        val totalCpu: CpuMetric,
+        val buildProcessCpu: CpuMetric,
+        val buildChildProcessesCpu: CpuMetric,
         val totalMemory: MemoryMetric,
-        val ownProcessMemory: MemoryMetric,
-        val spawnProcessMemory: MemoryMetric,
+        val buildProcessMemory: MemoryMetric,
+        val buildChildProcessesMemory: MemoryMetric,
         val ioReadSpeed: IoMetric,
         val ioWriteSpeed: IoMetric,
         val networkUploadSpeed: IoMetric,
